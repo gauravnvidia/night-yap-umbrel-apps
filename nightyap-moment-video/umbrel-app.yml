@@ -4,7 +4,7 @@ name: Night Yap Video
 tagline: Makes the "Download video" clips for the Night Yap app
 icon: https://nightyap.com/favicon.svg
 category: developer
-version: "1.0.0"
+version: "1.1.0"
 port: 8786
 description: >-
   Renders a Night Yap listener's own heckle answer as an MP4 (the comic on stage, the voice, the
@@ -22,7 +22,7 @@ repo: ""
 support: https://nightyap.com/support
 gallery: []
 releaseNotes: >-
-  First version.
+  The clips draw Raju and Tessa's new characters.
 dependencies: []
 path: ""
 defaultUsername: ""
