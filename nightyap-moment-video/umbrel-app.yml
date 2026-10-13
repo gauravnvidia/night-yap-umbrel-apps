@@ -1,0 +1,29 @@
+manifestVersion: 1
+id: nightyap-moment-video
+name: Night Yap Video
+tagline: Makes the "Download video" clips for the Night Yap app
+icon: https://nightyap.com/favicon.svg
+category: developer
+version: "1.0.0"
+port: 8786
+description: >-
+  Renders a Night Yap listener's own heckle answer as an MP4 (the comic on stage, the voice, the
+  crowd's laugh) for the app's Me, Your moments, "Download video".
+
+
+  It holds no secrets and stores nothing but a week-long cache of finished clips. It renders one
+  video at a time at low CPU priority, so other apps on this Umbrel (Kokoro) always come first. The
+  app reaches it at https://video.nativ-elements.in through the Cloudflare Tunnel app.
+developer: Night Yap
+website: https://nightyap.com
+submitter: Night Yap
+submission: https://nightyap.com
+repo: ""
+support: https://nightyap.com/support
+gallery: []
+releaseNotes: >-
+  First version.
+dependencies: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""

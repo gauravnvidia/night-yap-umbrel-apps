@@ -1,0 +1,31 @@
+version: "3.7"
+
+services:
+  # Umbrel's own login-protected page for the app (port 8786 in the manifest). The public address
+  # does not go through it: the Cloudflare Tunnel app reaches the service directly at
+  # http://nightyap-moment-video_web_1:8787 on Umbrel's shared network.
+  app_proxy:
+    environment:
+      APP_HOST: nightyap-moment-video_web_1
+      APP_PORT: 8787
+
+  web:
+    image: ghcr.io/gauravnvidia/night-yap-moment-video:sha-4ffb8b5@sha256:338167654674a5528b4ec09431d79a2d00c18444b121859d806addf990bc2f28
+    user: "1000:1000"
+    init: true
+    restart: on-failure
+    stop_grace_period: 15s
+    environment:
+      PORT: 8787
+      CACHE_DIR: /cache
+      # one render at a time plus one waiting; a third gets "busy" (keeps every answer well under
+      # Cloudflare's 100 s limit on the Umbrel's CPU)
+      MAX_QUEUE: 2
+    volumes:
+      - ${APP_DATA_DIR}/data/cache:/cache
+    # low priority: Kokoro (Tessa's live voice) always wins the CPU. cpu_shares 128 is an eighth of
+    # a normal container's weight, cpus caps it at one of the 8 threads, and the image runs at nice 10.
+    cpu_shares: 128
+    cpus: 1.0
+    mem_limit: 768m
+    memswap_limit: 768m
