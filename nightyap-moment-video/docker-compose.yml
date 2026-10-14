@@ -10,7 +10,7 @@ services:
       APP_PORT: 8787
 
   web:
-    image: ghcr.io/gauravnvidia/night-yap-moment-video:sha-7a17f82@sha256:5e0fa1a0dbb450084aafb14c6766943a6e0697a65deaad80a49aefd8e3701c3a
+    image: ghcr.io/gauravnvidia/night-yap-moment-video:sha-4ffb8b5@sha256:338167654674a5528b4ec09431d79a2d00c18444b121859d806addf990bc2f28
     user: "1000:1000"
     init: true
     restart: on-failure
