@@ -1,0 +1,40 @@
+manifestVersion: 1
+id: paadtak-streamer
+name: Paad Tak Stream
+tagline: Streams paadtak.com live to YouTube
+icon: https://paadtak.com/icon-512.png
+category: media
+version: "1.0.0"
+port: 8788
+description: >-
+  Opens the Paad Tak TV page (https://paadtak.com/?stream) in a browser on a virtual screen and
+  sends its picture and sound live to the Paad Tak YouTube channel, around the clock, at 1280x720
+  and 30 frames a second. Nothing is recorded or stored on the way; YouTube keeps the replay.
+
+
+  Low priority by design: Night Yap's apps and Kokoro on this Umbrel always win the CPU. Under load
+  the stream may stutter rather than slow anything else down.
+
+
+  The YouTube stream key lives only in this app's settings (right-click the app, Settings, Advanced,
+  Environment variables, YOUTUBE_STREAM_KEY). Without a key the app sits idle. It has no web page of
+  its own, so opening it shows nothing.
+developer: Paad Tak
+website: https://paadtak.com
+submitter: Paad Tak
+submission: https://paadtak.com
+repo: ""
+support: https://paadtak.com
+gallery: []
+releaseNotes: >-
+  First version.
+dependencies: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""
+environment:
+  - name: YOUTUBE_STREAM_KEY
+    services: [web]
+    note: >-
+      The stream key from YouTube Studio (Go live, Stream). Paste it here and choose Apply and
+      restart; the stream starts about half a minute later. Clear it to stop streaming.

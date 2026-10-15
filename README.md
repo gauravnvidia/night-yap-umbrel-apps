@@ -1,7 +1,11 @@
 # Night Yap apps for Umbrel
 
-A community app store for umbrelOS with one app, **Night Yap Video**
-(`nightyap-moment-video`): the renderer behind the Night Yap app's "Download video". It holds no
-secrets; its image is `ghcr.io/gauravnvidia/night-yap-moment-video`.
+A community app store for umbrelOS with two apps. Neither holds secrets.
+
+- **Night Yap Video** (`nightyap-moment-video`): the renderer behind the Night Yap app's "Download
+  video". Image `ghcr.io/gauravnvidia/night-yap-moment-video`.
+- **Paad Tak Stream** (`paadtak-streamer`): streams https://paadtak.com/?stream live to YouTube, at
+  low priority. Image `ghcr.io/gauravnvidia/paadtak-streamer`. The YouTube stream key is entered
+  only in the app's settings on the Umbrel (Advanced, Environment variables), never here.
 
 Add this repository's URL in umbrelOS: App Store, the three dots, Community App Stores.

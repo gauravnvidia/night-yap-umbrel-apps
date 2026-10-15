@@ -1,0 +1,24 @@
+version: "3.7"
+
+services:
+  # No web page and no app_proxy: the app only sends a stream out to YouTube. The stream key is set by
+  # the owner in the app's settings (Advanced, Environment variables, YOUTUBE_STREAM_KEY; declared in
+  # umbrel-app.yml) and is never in this file. Without it the container idles.
+  web:
+    image: ghcr.io/gauravnvidia/paadtak-streamer:sha-5aff874@sha256:9ac8e3cb15d4b7ed732cfeb664a459be723af0bfe2ef0142770b988958f348c2
+    user: "1000:1000"
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 15s
+    shm_size: 512m
+    environment:
+      STREAM_URL: https://paadtak.com/?stream
+    volumes:
+      - ${APP_DATA_DIR}/data:/data
+    # low priority: Night Yap's apps and Kokoro always win the CPU. cpu_shares 128 is an eighth of a
+    # normal container's weight, cpus caps it at two of the 8 threads, and Chromium and ffmpeg run at
+    # nice 10 inside. Under load the stream stutters instead of slowing anything else.
+    cpu_shares: 128
+    cpus: 2.0
+    mem_limit: 1200m
+    memswap_limit: 1200m
