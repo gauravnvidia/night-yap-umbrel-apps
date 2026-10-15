@@ -5,7 +5,7 @@ services:
   # the owner in the app's settings (Advanced, Environment variables, YOUTUBE_STREAM_KEY; declared in
   # umbrel-app.yml) and is never in this file. Without it the container idles.
   web:
-    image: ghcr.io/gauravnvidia/paadtak-streamer:sha-085109a@sha256:8dfba61d001b9ea8a84d34b6ca4b9dd2785332030f2c39fd23d5e476047df6db
+    image: ghcr.io/gauravnvidia/paadtak-streamer:sha-aabe30e@sha256:0dc6f689b4b002ae873e3fd05c967068fe0029e920755ff27751963d10021287
     user: "1000:1000"
     init: true
     restart: unless-stopped

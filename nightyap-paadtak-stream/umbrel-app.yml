@@ -4,7 +4,7 @@ name: Paad Tak Stream
 tagline: Streams paadtak.com live to YouTube
 icon: https://paadtak.com/icon-512.png
 category: media
-version: "1.0.1"
+version: "1.0.2"
 port: 8788
 description: >-
   Opens the Paad Tak TV page (https://paadtak.com/?stream) in a browser on a virtual screen and
@@ -27,8 +27,9 @@ repo: ""
 support: https://paadtak.com
 gallery: []
 releaseNotes: >-
-  Starts cleanly after a restart or an Umbrel reboot (clears the last run's screen and sound
-  state first).
+  Repairs itself: checks every 5 minutes that YouTube shows the channel live, and restarts the
+  stream if it is off air for 10 minutes, if the picture freezes, or if the browser or encoder
+  stops. At most one restart every 10 minutes, waiting longer if restarts don't help.
 dependencies: []
 path: ""
 defaultUsername: ""
