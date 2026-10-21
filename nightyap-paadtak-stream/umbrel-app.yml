@@ -4,7 +4,7 @@ name: Paad Tak Stream
 tagline: Streams paadtak.com live to YouTube
 icon: https://paadtak.com/icon-512.png
 category: media
-version: "1.0.3"
+version: "1.0.4"
 port: 8788
 description: >-
   Opens the Paad Tak TV page (https://paadtak.com/?stream) in a browser on a virtual screen and
@@ -27,8 +27,9 @@ repo: ""
 support: https://paadtak.com
 gallery: []
 releaseNotes: >-
-  Streams to the new Paad Tak channel, @paadtaklive: the self-repair now checks that channel is
-  live, instead of the old @paadtak channel.
+  Streams to the new Paad Tak channel, @paadtaklive (the self-repair checks that channel), and may
+  use up to four CPU threads instead of two, which stops the sound crackling while Kokoro is busy.
+  Kokoro and Night Yap still come first.
 dependencies: []
 path: ""
 defaultUsername: ""

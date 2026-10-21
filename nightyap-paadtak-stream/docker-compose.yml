@@ -16,9 +16,11 @@ services:
     volumes:
       - ${APP_DATA_DIR}/data:/data
     # low priority: Night Yap's apps and Kokoro always win the CPU. cpu_shares 128 is an eighth of a
-    # normal container's weight, cpus caps it at two of the 8 threads, and Chromium and ffmpeg run at
-    # nice 10 inside. Under load the stream stutters instead of slowing anything else.
+    # normal container's weight and Chromium and ffmpeg run at nice 10 inside, so when the CPU is full
+    # the others come first. cpus caps it at four of the 8 threads: the cap of two (until 1.0.4) was hit
+    # while Kokoro voiced segments (the machine runs slower then), and the stream's sound crackled
+    # (2026-10-21). The cap only limits the stream; it never takes CPU from the others.
     cpu_shares: 128
-    cpus: 2.0
+    cpus: 4.0
     mem_limit: 1200m
     memswap_limit: 1200m
