@@ -4,7 +4,7 @@ name: Paad Tak Stream
 tagline: Streams paadtak.com live to YouTube
 icon: https://paadtak.com/icon-512.png
 category: media
-version: "1.0.4"
+version: "1.0.5"
 port: 8788
 description: >-
   Opens the Paad Tak TV page (https://paadtak.com/?stream) in a browser on a virtual screen and
@@ -12,8 +12,8 @@ description: >-
   and 30 frames a second. Nothing is recorded or stored on the way; YouTube keeps the replay.
 
 
-  Low priority by design: Night Yap's apps and Kokoro on this Umbrel always win the CPU. Under load
-  the stream may stutter rather than slow anything else down.
+  Normal priority: the live stream gets its fair share of the CPU next to Night Yap's apps and
+  Kokoro, capped at four of the eight threads.
 
 
   The YouTube stream key lives only in this app's settings (right-click the app, Settings, Advanced,
@@ -27,9 +27,8 @@ repo: ""
 support: https://paadtak.com
 gallery: []
 releaseNotes: >-
-  Streams to the new Paad Tak channel, @paadtaklive (the self-repair checks that channel), and may
-  use up to four CPU threads instead of two, which stops the sound crackling while Kokoro is busy.
-  Kokoro and Night Yap still come first.
+  Normal priority for the stream (it was low), so the sound no longer crackles while Kokoro is
+  busy. Streams to the new Paad Tak channel, @paadtaklive.
 dependencies: []
 path: ""
 defaultUsername: ""
