@@ -5,7 +5,7 @@ services:
   # the owner in the app's settings (Advanced, Environment variables, YOUTUBE_STREAM_KEY; declared in
   # umbrel-app.yml) and is never in this file. Without it the container idles.
   web:
-    image: ghcr.io/gauravnvidia/paadtak-streamer:sha-b640d5d@sha256:9c3d265ec7b93053165f502a993dc778ec1b363cda385c02361b94719f755e8c
+    image: ghcr.io/gauravnvidia/paadtak-streamer:sha-8cbf829@sha256:456dd635e55ea65d05b64d2537ea773d1768b1f985625600c52f302b2f6f41dc
     user: "1000:1000"
     init: true
     restart: unless-stopped
@@ -15,11 +15,12 @@ services:
       STREAM_URL: https://paadtak.com/?stream
     volumes:
       - ${APP_DATA_DIR}/data:/data
-    # Normal priority (owner, 2026-10-21): a normal CPU weight, and Chromium and ffmpeg run at normal
-    # priority inside, so the live stream gets its fair share next to Night Yap and Kokoro. Low priority
-    # (cpu_shares 128 and nice 10, 1.0.0-1.0.4) made the sound crackle whenever Kokoro voiced segments.
-    # cpus still caps the stream at four of the 8 threads, so it can never take the whole machine.
-    cpu_shares: 1024
+    # Normal priority (owner, 2026-10-21): no cpu_shares, so the container gets Docker's default CPU
+    # weight, the same as Night Yap's apps and Kokoro. Low priority (cpu_shares 128, 1.0.0-1.0.4) made
+    # the sound crackle whenever Kokoro voiced segments. (An explicit cpu_shares 1024 is avoided: on
+    # cgroup v2 some Docker versions turn it into a weight below the default.) The nice 10 inside this
+    # image only orders the container's own processes, not it against other apps. cpus still caps the
+    # stream at four of the 8 threads, so it can never take the whole machine.
     cpus: 4.0
     mem_limit: 1200m
     memswap_limit: 1200m
