@@ -4,7 +4,7 @@ name: Wi-Fi Driver
 tagline: Loads the TP-Link Archer T2U Plus driver at every boot
 icon: https://getumbrel.github.io/umbrel-apps-gallery/tailscale/icon.svg
 category: networking
-version: "1.2.0"
+version: "1.3.0"
 port: 3455
 description: >-
   Loads the driver for the TP-Link Archer T2U Plus USB Wi-Fi adapter (Realtek RTL8821AU) every time
@@ -27,8 +27,9 @@ repo: https://github.com/morrownr/8821au-20210708
 support: https://github.com/morrownr/8821au-20210708/issues
 gallery: []
 releaseNotes: >-
-  Starts the Cloudflare Tunnel again once the T2U Plus is online, if it gave up at boot because the
-  network was not up yet (Kokoro and Night Yap video depend on it). Also joins the adapter to your
+  Keeps watching the Cloudflare Tunnel and starts it again whenever it has stopped (checked every
+  30 seconds), instead of checking once; at boot the tunnel gives up while the T2U Plus is still
+  connecting, and Kokoro and Night Yap video depend on it. Also joins the adapter to your
   Wi-Fi at every boot. Set WIFI_PASSWORD (and WIFI_SSID if it is not
   Airtel_gaur_4763_5G) in the app's settings: right-click the app, Settings, Environment variables.
 dependencies: []
