@@ -1,0 +1,50 @@
+version: "3.7"
+
+services:
+  # The app icon (port 3451 in the manifest) opens a one-line page behind the Umbrel login that sends
+  # the browser on to Firefox's own HTTPS address, https://<this Umbrel>:3453. The current linuxserver
+  # images (Selkies) only work over HTTPS, which Umbrel's app pages don't offer; that is why Umbrel's
+  # own Firefox app was disabled in July 2025.
+  app_proxy:
+    environment:
+      APP_HOST: nightyap-firefox_launcher_1
+      APP_PORT: 8080
+
+  launcher:
+    image: busybox:1.37.0@sha256:bdf57e528e45e4433820e045b29b4597825a1c9e38353532d90a01445013f82e
+    restart: on-failure
+    command: ["sh", "-c", "mkdir -p /www && printf '%s' \"$$PAGE\" > /www/index.html && exec httpd -f -p 8080 -h /www"]
+    environment:
+      PAGE: >-
+        <!doctype html><meta charset="utf-8"><title>Firefox</title>
+        <script>location.replace('https://' + location.hostname + ':3453/');</script>
+        <p style="font-family:sans-serif">Opening Firefox at
+        <a id="l" href="#">https://this-umbrel:3453</a>. The first time, your browser warns about the
+        certificate (it is the Umbrel's own); choose to continue.</p>
+        <script>var a=document.getElementById('l');a.href='https://'+location.hostname+':3453/';a.textContent=a.href;</script>
+
+  server:
+    image: lscr.io/linuxserver/firefox:1158.0.1build1-1xtradeb1.2404.1-ls131@sha256:45993af68db973c46673783581550fccf3685b6487de16338d36be120d204fbc
+    restart: on-failure
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: Asia/Kolkata
+      TITLE: Firefox
+      # The browser's own login (HTTP basic auth). The password is the one Umbrel generates for this
+      # app and shows in its info (deterministicPassword in umbrel-app.yml); without it there would be
+      # no login at all.
+      CUSTOM_USER: umbrel
+      PASSWORD: ${APP_PASSWORD}
+      DISABLE_SUDO: "true"
+    volumes:
+      - ${APP_DATA_DIR}/data/config:/config
+      # Downloads land straight in Umbrel's Files, Downloads (the same folder Transmission uses).
+      - ${UMBREL_ROOT}/data/storage/downloads:/config/Downloads
+    ports:
+      - 3453:3001
+    shm_size: "1gb"
+    # Plenty for browsing, never the whole machine (20 threads, 32 GB): Kokoro and the Paad Tak stream
+    # keep their share.
+    cpus: 4.0
+    mem_limit: 4g

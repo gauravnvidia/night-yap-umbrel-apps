@@ -1,0 +1,30 @@
+manifestVersion: 1
+id: nightyap-firefox
+name: Firefox
+tagline: Firefox on your Umbrel, downloads straight to Files
+icon: https://getumbrel.github.io/umbrel-apps-gallery/firefox/icon.svg
+category: networking
+version: "1158.0.1"
+port: 3451
+description: >-
+  Firefox running on this Umbrel, used from any browser on your network. Everything you download
+  goes straight to Files, Downloads on the Umbrel.
+
+
+  Opening the app sends you to Firefox's own secure address, https://umbrel.local:3453 (or the Umbrel's
+  IP address with :3453). The first time, your browser warns about the certificate, because it is the
+  Umbrel's own and not from a public authority; choose to continue. Then sign in with the username
+  and password shown in this app's info. Bookmark the https address to go there directly.
+developer: Mozilla Foundation
+website: https://www.mozilla.org/firefox/
+submitter: Night Yap
+submission: https://nightyap.com
+repo: https://github.com/linuxserver/docker-firefox
+support: https://discourse.linuxserver.io/
+gallery: []
+releaseNotes: >-
+  First version.
+dependencies: []
+path: ""
+defaultUsername: umbrel
+deterministicPassword: true
