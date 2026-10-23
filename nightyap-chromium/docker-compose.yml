@@ -31,9 +31,10 @@ services:
       PGID: "1000"
       TZ: Asia/Kolkata
       TITLE: Chromium
-      # The browser's own login (HTTP basic auth). The password is the one Umbrel generates for this
-      # app and shows in its info (deterministicPassword in umbrel-app.yml); without it there would be
-      # no login at all.
+      # The browser's own login (HTTP basic auth). By default the password Umbrel generates for this
+      # app and shows in its info (deterministicPassword in umbrel-app.yml). The owner's own PASSWORD
+      # from the app's settings (declared in umbrel-app.yml) replaces it: Umbrel writes it into its
+      # settings override, which wins over this value. An empty PASSWORD would mean no login at all.
       CUSTOM_USER: umbrel
       PASSWORD: ${APP_PASSWORD}
       DISABLE_SUDO: "true"

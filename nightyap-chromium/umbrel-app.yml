@@ -4,7 +4,7 @@ name: Chromium
 tagline: Chromium on your Umbrel, downloads straight to Files
 icon: https://getumbrel.github.io/umbrel-apps-gallery/chromium/icon.svg
 category: networking
-version: "2dba585f"
+version: "2dba585f-patch.1"
 port: 3452
 description: >-
   Chromium running on this Umbrel, used from any browser on your network. Everything you download
@@ -14,7 +14,8 @@ description: >-
   Opening the app sends you to Chromium's own secure address, https://umbrel.local:3454 (or the Umbrel's
   IP address with :3454). The first time, your browser warns about the certificate, because it is the
   Umbrel's own and not from a public authority; choose to continue. Then sign in with the username
-  and password shown in this app's info. Bookmark the https address to go there directly.
+  and password shown in this app's info, or set your own password (right-click the app, Settings,
+  Environment variables, PASSWORD). Bookmark the https address to go there directly.
 developer: The Chromium Project
 website: https://www.chromium.org/
 submitter: Night Yap
@@ -23,8 +24,15 @@ repo: https://github.com/linuxserver/docker-chromium
 support: https://discourse.linuxserver.io/
 gallery: []
 releaseNotes: >-
-  First version.
+  Choose your own password: right-click the app, Settings, Environment variables, PASSWORD.
 dependencies: []
 path: ""
 defaultUsername: umbrel
 deterministicPassword: true
+environment:
+  - name: PASSWORD
+    services: [server]
+    note: >-
+      Your own password for the browser's sign-in (username: umbrel). Type it here and choose
+      Apply and restart. Leave it unset to keep the long password Umbrel generated, shown in the
+      app's info. Never save it empty: an empty password turns the sign-in off.

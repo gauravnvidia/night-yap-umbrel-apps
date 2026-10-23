@@ -4,7 +4,7 @@ name: Firefox
 tagline: Firefox on your Umbrel, downloads straight to Files
 icon: https://getumbrel.github.io/umbrel-apps-gallery/firefox/icon.svg
 category: networking
-version: "1158.0.1"
+version: "1158.0.1-patch.1"
 port: 3451
 description: >-
   Firefox running on this Umbrel, used from any browser on your network. Everything you download
@@ -14,7 +14,8 @@ description: >-
   Opening the app sends you to Firefox's own secure address, https://umbrel.local:3453 (or the Umbrel's
   IP address with :3453). The first time, your browser warns about the certificate, because it is the
   Umbrel's own and not from a public authority; choose to continue. Then sign in with the username
-  and password shown in this app's info. Bookmark the https address to go there directly.
+  and password shown in this app's info, or set your own password (right-click the app, Settings,
+  Environment variables, PASSWORD). Bookmark the https address to go there directly.
 developer: Mozilla Foundation
 website: https://www.mozilla.org/firefox/
 submitter: Night Yap
@@ -23,8 +24,15 @@ repo: https://github.com/linuxserver/docker-firefox
 support: https://discourse.linuxserver.io/
 gallery: []
 releaseNotes: >-
-  First version.
+  Choose your own password: right-click the app, Settings, Environment variables, PASSWORD.
 dependencies: []
 path: ""
 defaultUsername: umbrel
 deterministicPassword: true
+environment:
+  - name: PASSWORD
+    services: [server]
+    note: >-
+      Your own password for the browser's sign-in (username: umbrel). Type it here and choose
+      Apply and restart. Leave it unset to keep the long password Umbrel generated, shown in the
+      app's info. Never save it empty: an empty password turns the sign-in off.
