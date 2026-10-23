@@ -3,30 +3,67 @@ version: "3.7"
 services:
   # No web page and no app_proxy. At every start (so at every boot, since Umbrel starts its apps) this
   # loads the TP-Link Archer T2U Plus driver (Realtek RTL8821AU, morrownr/8821au-20210708) that the
-  # owner built in /home/umbrel/8821au-20210708 with `make` (owner's request, 2026-10-23). umbrelOS
-  # resets /lib/modules and /usr/src at boot, so a DKMS install does not survive; the home folder does.
-  # The loading runs in the host's own namespaces (nsenter into PID 1) with the host's modprobe and
-  # insmod, which handle the kernel's compressed modules and dependencies; that needs privileged and
-  # the host PID namespace.
+  # owner built in /home/umbrel/8821au-20210708 with `make` (owner's request, 2026-10-23), then joins
+  # the adapter to the Wi-Fi network in WIFI_SSID / WIFI_PASSWORD (set by the owner in the app's
+  # settings, declared in umbrel-app.yml). umbrelOS resets /lib/modules, /usr/src and NetworkManager's
+  # saved connections at boot, so neither a DKMS install nor an nmcli connection survives; the home
+  # folder and this app's settings do. Everything runs in the host's own namespaces (nsenter into PID 1)
+  # with the host's modprobe, insmod and nmcli; that needs privileged and the host PID namespace.
   loader:
     image: busybox:1.37.0@sha256:bdf57e528e45e4433820e045b29b4597825a1c9e38353532d90a01445013f82e
     restart: unless-stopped
     privileged: true
     pid: host
+    environment:
+      WIFI_SSID: Airtel_gaur_4763_5G
     command:
       - sh
       - -c
       - |
         KO=/home/umbrel/8821au-20210708/8821au.ko
+        CON=t2u-plus
         host() { nsenter -t 1 -m -u -i -n -p -- "$$@"; }
+        say() { echo "wifi-driver: $$*"; }
+
         if host grep -q '^8821au ' /proc/modules; then
-          echo "wifi-driver: 8821au already loaded"
+          say "8821au already loaded"
         else
           host /usr/sbin/modprobe cfg80211
           if host /usr/sbin/insmod "$$KO"; then
-            echo "wifi-driver: loaded $$KO"
+            say "loaded $$KO"
           else
-            echo "wifi-driver: FAILED to load $$KO. If umbrelOS updated its kernel, rebuild once in the terminal (cd ~/8821au-20210708; sudo apt update; sudo apt install -y bc build-essential linux-headers-<kernel>; make -j16), then restart this app."
+            say "FAILED to load $$KO. If umbrelOS updated its kernel, rebuild once in the terminal (cd ~/8821au-20210708; sudo apt update; sudo apt install -y bc build-essential linux-headers-<kernel>; make -j16), then restart this app."
+            exec sleep 2147483647
           fi
+        fi
+
+        # The adapter's network interface (read in the host's namespaces; this container has its own):
+        # the one whose USB driver is this one (rtl8821au).
+        DEV=""
+        for i in $$(seq 1 60); do
+          for n in $$(host ls /sys/class/net); do
+            case "$$(host readlink "/sys/class/net/$$n/device/driver" 2>/dev/null)" in *8821au*) DEV=$$n ;; esac
+          done
+          [ -n "$$DEV" ] && break
+          sleep 2
+        done
+        if [ -z "$$DEV" ]; then
+          say "driver loaded, but no T2U Plus interface appeared within 2 minutes (is it plugged in?)"
+          exec sleep 2147483647
+        fi
+        say "adapter is $$DEV"
+
+        if [ -z "$$WIFI_PASSWORD" ]; then
+          say "no WIFI_PASSWORD set in the app's settings, so $$DEV is not joined to Wi-Fi"
+          exec sleep 2147483647
+        fi
+        sleep 5
+        host nmcli connection delete "$$CON" >/dev/null 2>&1
+        if host nmcli connection add type wifi ifname "$$DEV" con-name "$$CON" ssid "$$WIFI_SSID" \
+             wifi-sec.key-mgmt wpa-psk wifi-sec.psk "$$WIFI_PASSWORD" connection.autoconnect yes >/dev/null \
+           && host nmcli connection up "$$CON" >/dev/null; then
+          say "$$DEV joined $$WIFI_SSID"
+        else
+          say "could not join $$WIFI_SSID on $$DEV (check WIFI_SSID and WIFI_PASSWORD in the app's settings)"
         fi
         exec sleep 2147483647

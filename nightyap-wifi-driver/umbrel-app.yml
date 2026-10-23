@@ -4,13 +4,15 @@ name: Wi-Fi Driver
 tagline: Loads the TP-Link Archer T2U Plus driver at every boot
 icon: https://getumbrel.github.io/umbrel-apps-gallery/tailscale/icon.svg
 category: networking
-version: "1.0.0"
+version: "1.1.0"
 port: 3455
 description: >-
   Loads the driver for the TP-Link Archer T2U Plus USB Wi-Fi adapter (Realtek RTL8821AU) every time
   the Umbrel starts. umbrelOS resets its system folders at boot, so a normally installed driver is
   lost on restart; this app loads the copy built in the home folder (/home/umbrel/8821au-20210708)
-  instead. It has no web page, so opening it shows nothing.
+  instead, then joins the adapter to the Wi-Fi network set in the app's settings (WIFI_SSID and
+  WIFI_PASSWORD), because umbrelOS also forgets saved Wi-Fi connections at boot. It has no web page,
+  so opening it shows nothing.
 
 
   It runs with full system access (privileged), which loading a driver needs. After an umbrelOS
@@ -25,8 +27,19 @@ repo: https://github.com/morrownr/8821au-20210708
 support: https://github.com/morrownr/8821au-20210708/issues
 gallery: []
 releaseNotes: >-
-  First version.
+  Also joins the adapter to your Wi-Fi at every boot. Set WIFI_PASSWORD (and WIFI_SSID if it is not
+  Airtel_gaur_4763_5G) in the app's settings: right-click the app, Settings, Environment variables.
 dependencies: []
 path: ""
 defaultUsername: ""
 defaultPassword: ""
+environment:
+  - name: WIFI_PASSWORD
+    services: [loader]
+    note: >-
+      The password of your Wi-Fi network. Type it here and choose Apply and restart; the T2U Plus
+      joins the network about half a minute later, and again after every reboot.
+  - name: WIFI_SSID
+    services: [loader]
+    note: >-
+      The Wi-Fi network's name. Leave it unset to use Airtel_gaur_4763_5G.
