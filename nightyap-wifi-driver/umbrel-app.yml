@@ -1,0 +1,32 @@
+manifestVersion: 1
+id: nightyap-wifi-driver
+name: Wi-Fi Driver
+tagline: Loads the TP-Link Archer T2U Plus driver at every boot
+icon: https://getumbrel.github.io/umbrel-apps-gallery/tailscale/icon.svg
+category: networking
+version: "1.0.0"
+port: 3455
+description: >-
+  Loads the driver for the TP-Link Archer T2U Plus USB Wi-Fi adapter (Realtek RTL8821AU) every time
+  the Umbrel starts. umbrelOS resets its system folders at boot, so a normally installed driver is
+  lost on restart; this app loads the copy built in the home folder (/home/umbrel/8821au-20210708)
+  instead. It has no web page, so opening it shows nothing.
+
+
+  It runs with full system access (privileged), which loading a driver needs. After an umbrelOS
+  update that changes the kernel, rebuild the driver once in the terminal (cd ~/8821au-20210708,
+  sudo apt update, sudo apt install -y bc build-essential linux-headers-<kernel>, make -j16) and
+  restart this app; its logs say when that is needed.
+developer: Night Yap
+website: https://github.com/morrownr/8821au-20210708
+submitter: Night Yap
+submission: https://nightyap.com
+repo: https://github.com/morrownr/8821au-20210708
+support: https://github.com/morrownr/8821au-20210708/issues
+gallery: []
+releaseNotes: >-
+  First version.
+dependencies: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""

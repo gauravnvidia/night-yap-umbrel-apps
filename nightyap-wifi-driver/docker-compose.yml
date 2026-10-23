@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+  # No web page and no app_proxy. At every start (so at every boot, since Umbrel starts its apps) this
+  # loads the TP-Link Archer T2U Plus driver (Realtek RTL8821AU, morrownr/8821au-20210708) that the
+  # owner built in /home/umbrel/8821au-20210708 with `make` (owner's request, 2026-10-23). umbrelOS
+  # resets /lib/modules and /usr/src at boot, so a DKMS install does not survive; the home folder does.
+  # The loading runs in the host's own namespaces (nsenter into PID 1) with the host's modprobe and
+  # insmod, which handle the kernel's compressed modules and dependencies; that needs privileged and
+  # the host PID namespace.
+  loader:
+    image: busybox:1.37.0@sha256:bdf57e528e45e4433820e045b29b4597825a1c9e38353532d90a01445013f82e
+    restart: unless-stopped
+    privileged: true
+    pid: host
+    command:
+      - sh
+      - -c
+      - |
+        KO=/home/umbrel/8821au-20210708/8821au.ko
+        host() { nsenter -t 1 -m -u -i -n -p -- "$$@"; }
+        if host grep -q '^8821au ' /proc/modules; then
+          echo "wifi-driver: 8821au already loaded"
+        else
+          host /usr/sbin/modprobe cfg80211
+          if host /usr/sbin/insmod "$$KO"; then
+            echo "wifi-driver: loaded $$KO"
+          else
+            echo "wifi-driver: FAILED to load $$KO. If umbrelOS updated its kernel, rebuild once in the terminal (cd ~/8821au-20210708; sudo apt update; sudo apt install -y bc build-essential linux-headers-<kernel>; make -j16), then restart this app."
+          fi
+        fi
+        exec sleep 2147483647

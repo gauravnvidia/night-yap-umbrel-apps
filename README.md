@@ -1,6 +1,6 @@
 # Night Yap apps for Umbrel
 
-A community app store for umbrelOS with four apps. None holds secrets.
+A community app store for umbrelOS with five apps. None holds secrets.
 
 - **Night Yap Video** (`nightyap-moment-video`): the renderer behind the Night Yap app's "Download
   video". Image `ghcr.io/gauravnvidia/night-yap-moment-video`.
@@ -14,5 +14,9 @@ A community app store for umbrelOS with four apps. None holds secrets.
   app icon opens a small page that forwards to https://<umbrel>:3453 (Firefox) or :3454 (Chromium),
   with the Umbrel's self-signed certificate. Sign in with `umbrel` and the password Umbrel generates
   for the app (shown in its info).
+
+- **Wi-Fi Driver** (`nightyap-wifi-driver`): loads the TP-Link Archer T2U Plus driver (RTL8821AU, built from
+  morrownr/8821au-20210708 in /home/umbrel/8821au-20210708) at every boot, because umbrelOS resets
+  /lib/modules at boot. Privileged, host PID namespace; it uses the host's own modprobe and insmod.
 
 Add this repository's URL in umbrelOS: App Store, the three dots, Community App Stores.
