@@ -64,16 +64,32 @@ services:
            && host nmcli connection up "$$CON" >/dev/null; then
           say "$$DEV joined $$WIFI_SSID"
           # The Cloudflare Tunnel app (Kokoro, Night Yap video) starts with the other apps, before this
-          # adapter is online, fails its DNS lookup and exits without retrying (seen 2026-10-23, twice;
-          # a single check right after joining raced it: the connector was still starting, then quit).
-          # So watch it for as long as this app runs and start it again whenever it is not running.
+          # adapter is online, and its tunnel gives up on the failed DNS lookup. Its connector container
+          # is a wrapper that keeps running after that, so Docker shows it "running" and never restarts
+          # it (seen 2026-10-23 in three reboot tests). The real signal is cloudflared's own /ready on
+          # its metrics port (40901), which answers 200 only while the tunnel is connected. Watch it for
+          # as long as this app runs; after two failed checks in a row, restart the connector. At most
+          # three restarts per start of this app, so a check that cannot reach /ready for some other
+          # reason cannot keep bouncing a working tunnel.
           for i in $$(seq 1 30); do host getent hosts region1.v2.argotunnel.com >/dev/null 2>&1 && break; sleep 2; done
-          while true; do
+          fails=0
+          restarts=0
+          while [ "$$restarts" -lt 3 ]; do
             sleep 30
-            if [ -z "$$(host docker ps -q --filter name=^cloudflared_connector_1$$ --filter status=running)" ]; then
-              host docker start cloudflared_connector_1 >/dev/null 2>&1 && say "started the Cloudflare Tunnel connector again (it had stopped)"
+            if wget -q -T 5 -O /dev/null http://cloudflared_connector_1:40901/ready; then
+              fails=0
+            else
+              fails=$$((fails + 1))
+              if [ "$$fails" -ge 2 ]; then
+                out=$$(host docker restart cloudflared_connector_1 2>&1)
+                restarts=$$((restarts + 1))
+                say "Cloudflare Tunnel was not connected for a minute; restarted its connector ($$restarts of 3: $$out)"
+                fails=0
+                sleep 60
+              fi
             fi
           done
+          say "stopped watching the Cloudflare Tunnel after 3 restarts; restart this app to watch again"
         else
           say "could not join $$WIFI_SSID on $$DEV (check WIFI_SSID and WIFI_PASSWORD in the app's settings)"
         fi
