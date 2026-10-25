@@ -12,7 +12,7 @@ services:
   # The GPU permission in umbrel-app.yml makes umbrelOS add the NVIDIA device reservation and driver
   # libraries to this service when it installs the app; nothing NVIDIA-specific belongs in this file.
   web:
-    image: ghcr.io/gauravnvidia/omnivoice-umbrel:sha-b044df9@sha256:963cbc243fe3655195daa228cdd89423bf81daded9cd16436ec8121d7ca107ec
+    image: ghcr.io/gauravnvidia/omnivoice-umbrel:sha-37214cb@sha256:1e47dae13e420a292e506a53b4d7cd4c9b3a8e16b73b6d4d2a30d408670fe6f8
     user: "1000:1000"
     init: true
     restart: on-failure
