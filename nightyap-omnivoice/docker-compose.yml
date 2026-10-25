@@ -1,0 +1,29 @@
+version: "3.7"
+
+services:
+  # Open on the local network without the Umbrel login (like Umbrel's Ollama app), so scripts on the Mac
+  # can call http://umbrel.local:8789 directly. Nothing reaches it from the internet (no tunnel route).
+  app_proxy:
+    environment:
+      APP_HOST: nightyap-omnivoice_web_1
+      APP_PORT: 8000
+      PROXY_AUTH_ADD: "false"
+
+  # The GPU permission in umbrel-app.yml makes umbrelOS add the NVIDIA device reservation and driver
+  # libraries to this service when it installs the app; nothing NVIDIA-specific belongs in this file.
+  web:
+    image: ghcr.io/gauravnvidia/omnivoice-umbrel:sha-b044df9@sha256:963cbc243fe3655195daa228cdd89423bf81daded9cd16436ec8121d7ca107ec
+    user: "1000:1000"
+    init: true
+    restart: on-failure
+    stop_grace_period: 15s
+    shm_size: 1g
+    environment:
+      DEFAULT_LANGUAGE: hi
+    volumes:
+      # HF_HOME (the model, about 2.5 GB) and the saved voices
+      - ${APP_DATA_DIR}/data:/data
+    # the work runs on the GPU; the caps only keep a stuck load from crowding the stream and Kokoro
+    cpus: 4.0
+    mem_limit: 8g
+    memswap_limit: 8g

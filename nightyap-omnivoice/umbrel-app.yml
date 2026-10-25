@@ -1,0 +1,34 @@
+manifestVersion: 1
+id: nightyap-omnivoice
+name: OmniVoice
+tagline: Multilingual text-to-speech and voice cloning on the GPU
+icon: https://getumbrel.github.io/umbrel-apps-gallery/kokoro/icon.svg
+category: ai
+version: "0.2.1"
+port: 8789
+description: >-
+  An experiment: OmniVoice (k2-fsa, Apache-2.0), a text-to-speech model for over 600 languages
+  including Hindi, running on the Umbrel's NVIDIA GPU. It clones a voice from a 3 to 10 second clip.
+
+
+  The API is open on the local network at http://umbrel.local:8789 (no Umbrel login):
+  POST /v1/audio/speech (OpenAI style, like Kokoro), POST /v1/voices to save a cloned voice,
+  GET /health to see the GPU and the model state. The app's page is a small test form.
+
+
+  The model (about 2.5 GB) downloads into the app's data folder on first start, so the first
+  start takes a while. Uninstalling the app deletes the model and the saved voices.
+developer: k2-fsa
+website: https://github.com/k2-fsa/OmniVoice
+submitter: Paad Tak
+submission: https://paadtak.com
+repo: https://github.com/k2-fsa/OmniVoice
+support: https://github.com/k2-fsa/OmniVoice/issues
+gallery: []
+releaseNotes: ""
+dependencies: []
+permissions:
+  - GPU
+path: ""
+defaultUsername: ""
+defaultPassword: ""
